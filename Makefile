@@ -1,5 +1,3 @@
-#!Makefile
-
 C_SOURCES = $(shell find . -name "*.c")
 C_OBJECTS = $(patsubst %.c, %.o, $(C_SOURCES))
 S_SOURCES = $(shell find . -name "*.s")
@@ -15,47 +13,48 @@ ASM_FLAGS = -f elf -g -F stabs
 
 all: $(S_OBJECTS) $(C_OBJECTS) link update_image
 
+# The automatic variable `$<' is just the first prerequisite
 .c.o:
-    @echo 编译代码文件 $< ...
-    $(CC) $(C_FLAGS) $< -o $@
+	@echo 编译代码文件 $< ...
+	$(CC) $(C_FLAGS) $< -o $@
 
 .s.o:
-    @echo 编译汇编文件 $< ...
-    $(ASM) $(ASM_FLAGS) $<
+	@echo 编译汇编文件 $< ...
+	$(ASM) $(ASM_FLAGS) $<
 
 link:
-    @echo 链接内核文件...
-    $(LD) $(LD_FLAGS) $(S_OBJECTS) $(C_OBJECTS) -o tarixy
+	@echo 链接内核文件...
+	$(LD) $(LD_FLAGS) $(S_OBJECTS) $(C_OBJECTS) -o tarixy
 
 .PHONY:clean
 clean:
-    $(RM) $(S_OBJECTS) $(C_OBJECTS) tarixy
+	$(RM) $(S_OBJECTS) $(C_OBJECTS) tarixy  
 
 .PHONY:update_image
 update_image:
-    sudo mount floppy.img /mnt/kernel
-    sudo cp tarixy /mnt/kernel/tarixy
-    sleep 1
-    sudo umount /mnt/kernel
+	sudo mount floppy.img /mnt/kernel
+	sudo cp hx_kernel /mnt/kernel/tarixy  
+	sleep 1
+	sudo umount /mnt/kernel
 
 .PHONY:mount_image
 mount_image:
-    sudo mount floppy.img /mnt/kernel
+	sudo mount floppy.img /mnt/kernel
 
 .PHONY:umount_image
 umount_image:
-    sudo umount /mnt/kernel
+	sudo umount /mnt/kernel
 
 .PHONY:qemu
 qemu:
-    qemu -fda floppy.img -boot a
+	qemu -fda floppy.img -boot a
 
 .PHONY:bochs
 bochs:
-    bochs -f tools/bochsrc.txt
+	bochs -f scripts/bochsrc.txt
 
 .PHONY:debug
 debug:
-    qemu -S -s -fda floppy.img -boot a &
-    sleep 1
-    cgdb -x tools/gdbinit
+	qemu -S -s -fda floppy.img -boot a &
+	sleep 1
+	cgdb -x scripts/gdbinit
