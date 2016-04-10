@@ -5,7 +5,7 @@ extern void keyboard_handler(void);
 extern char read_port(unsigned short port);
 extern void write_port(unsigned short port, unsigned char data);
 extern void load_idt(unsigned long *idt_ptr);
-int kern_entry(){
+void entry(void){
   	const char *str = "*Tarixy OS*";
 	clear();
 	log(str);
@@ -13,5 +13,4 @@ int kern_entry(){
 	idt_init();
 	kb_init();
 	while(1);
-	return 0;
 }
