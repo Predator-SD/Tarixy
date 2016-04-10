@@ -1,29 +1,45 @@
-MBOOT_HEADER_MAGIC  equ     0x1BADB002
-MBOOT_PAGE_ALIGN    equ     1 << 0
-MBOOT_MEM_INFO      equ     1 << 1    
-MBOOT_HEADER_FLAGS  equ     MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO
-MBOOT_CHECKSUM      equ     -(MBOOT_HEADER_MAGIC+MBOOT_HEADER_FLAGS)
-[BITS 32]
+bits 32
 section .text
-dd MBOOT_HEADER_MAGIC
-dd MBOOT_HEADER_FLAGS
-dd MBOOT_CHECKSUM   
-[GLOBAL start]  
-[GLOBAL glb_mboot_ptr] 
-[EXTERN kern_entry]   
+        align 4
+        dd 0x1BADB002
+        dd 0x00 
+        dd - (0x1BADB002 + 0x00) 
+global start
+global keyboard_handler
+global read_port
+global write_port
+global load_idt
+
+extern entry
+extern keyboard_handler_main
+
+read_port:
+	mov edx, [esp + 4]
+	in al, dx
+	ret
+
+write_port:
+	mov   edx, [esp + 4]    
+	mov   al, [esp + 4 + 4]  
+	out   dx, al  
+	ret
+
+load_idt:
+	mov edx, [esp + 4]
+	lidt [edx]
+	sti
+	ret
+
+keyboard_handler:                 
+	call    keyboard_handler_main
+	iretd
+
 start:
-    cli       
-    mov esp, STACK_TOP  
-    mov ebp, 0 
-    and esp, 0FFFFFFF0H
-    mov [glb_mboot_ptr], ebx
-    call kern_entry   
-stop:
-    hlt      
-    jmp stop      
-section .bss       
-stack:
-    resb 32768    
-glb_mboot_ptr:     
-    resb 4
-STACK_TOP equ $-stack-1
+	cli 
+	mov esp, stack_space
+	call kmain
+	hlt 
+
+section .bss
+resb 8192; 
+stack_space:
