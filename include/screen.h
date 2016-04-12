@@ -48,6 +48,8 @@ unsigned char keyboard_map[128] =
     0,	/* All other keys are undefined */
 };
 
+unsigned char livecmd='';
+
 extern unsigned char keyboard_map[128];
 extern void keyboard_handler(void);
 extern char read_port(unsigned short port);
@@ -112,7 +114,7 @@ void log(const char *str)
 	}
 }
 
-void new(void)
+void newline(void)
 {
 	unsigned int line_size = BYTES_FOR_EACH_ELEMENT * COLUMNS_IN_LINE;
 	current_loc = current_loc + (line_size - current_loc % (line_size));
@@ -138,10 +140,21 @@ void keyboard_handler_main(void)
 		if(keycode < 0)
 			return;
 		if(keycode == ENTER_KEY_CODE) {
-			new();
+			newline();
+			const char cmd=livecmd;
+			an(cmd);
+			livecmd='';
+			newline();
 			return;
+		}else{
+			livecmd+=keyboard_map[(unsigned char) keycode];
+		    vidptr[current_loc++] = keyboard_map[(unsigned char) keycode];
+		    vidptr[current_loc++] = 0x07;
 		}
-		vidptr[current_loc++] = keyboard_map[(unsigned char) keycode];
-		vidptr[current_loc++] = 0x07;
 	}
+}
+
+void an(const char *str){
+	const char sorry='Develop in progress...';
+	log(sorry);
 }
