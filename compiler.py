@@ -7,7 +7,7 @@ class compiler(object):
     self.range={}
     self.atclass=''
   def debug(self):
-    print(self.analysis("class new (){"))
+    print(self.analysis("var int a=0;"))
   def de(self,str):
     p1=str.replace(' ','7')
     time=0
@@ -47,6 +47,8 @@ class compiler(object):
       if i == key:
         res.append(time)
     return res
+  def iscall(self,a):
+    pass
   def analysis(self,line):
     if line[:6]=="class ":
       p2=line.replace(' ','$')
@@ -55,6 +57,8 @@ class compiler(object):
       self.atclass=r1
       print("Met new class:")
       print(self.atclass)
+      line=''
     if line[:4]=="met " or line[:4]=="var ":
       line=line[4:]
+    print(line)
 test=compiler()
