@@ -1,5 +1,6 @@
 #include "types.h"
 #include "screen.h"
+#include "tarixy.h"
 extern unsigned char keyboard_map[128];
 extern void keyboard_handler(void);
 extern char read_port(unsigned short port);
@@ -12,5 +13,6 @@ void entry(void){
 	new();
 	idt_init();
 	kb_init();
+        do();
 	while(1);
 }

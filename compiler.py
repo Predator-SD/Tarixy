@@ -1,13 +1,12 @@
 class compiler(object):
   def __init__(self):
     self.debug()
-    self.name={}
-    self.val={}
-    self.type={}
-    self.range={}
+    self.classes=[]
+    self.Codes=["","\n"]
     self.atclass=''
   def debug(self):
-    print(self.analysis("var int a=0;"))
+    print(self.analysis("class new(){"))
+    print(self.Codes)
   def de(self,str):
     p1=str.replace(' ','7')
     time=0
@@ -51,14 +50,17 @@ class compiler(object):
     pass
   def analysis(self,line):
     if line[:6]=="class ":
-      p2=line.replace(' ','$')
+      p2=line.replace('(',' ').replace(' ','$')
       m1=self.scan(p2,'$')
       r1=p2[m1[0]:m1[1]-1]
       self.atclass=r1
       print("Met new class:")
       print(self.atclass)
+      ins=r'#include "'+self.atclass+r'"'
+      (self.Codes).insert(0,ins)
       line=''
     if line[:4]=="met " or line[:4]=="var ":
+      p3=self.scan(line.replace('=',' ').replace,' ')
       line=line[4:]
     print(line)
 test=compiler()
