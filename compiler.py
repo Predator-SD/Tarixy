@@ -1,6 +1,9 @@
 class compiler(object):
   def __init__(self):
     print(self.gettype("   var double 233"))
+    self.name={}
+    self.val={}
+    self.type={}
   def de(self,str):
     p1=str.replace(' ','7')
     time=0
