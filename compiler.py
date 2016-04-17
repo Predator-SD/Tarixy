@@ -4,6 +4,7 @@ class compiler(object):
     self.name={}
     self.val={}
     self.type={}
+    self.range={}
   def debug(self):
     print(self.gettype("var int a=2"))
   def de(self,str):
@@ -37,4 +38,20 @@ class compiler(object):
       type="error"
     mat=[range,type]
     return mat
+  def scan(self,line,key):
+    time=0
+    for i in line:
+      time=time+1
+      if i == key:
+        return (time-1)
+    return -1
+  def analysis(self,line):
+    if line[:4]=="met " or line[:4]=="var ":
+      line=line[4:]
+    p1=line.replace("<<",'$').replace(">>",'%')
+    head=self.scan(p1,'$')
+    tail=self.scan(p1,'$')
+    if head!=-1 and tail!=-1:
+      classname=p1[:head]
+      stuff=p1[head:tail+1]
 test=compiler()
