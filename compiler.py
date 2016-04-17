@@ -1,9 +1,11 @@
 class compiler(object):
   def __init__(self):
-    print(self.gettype("   var double 233"))
+    self.debug()
     self.name={}
     self.val={}
     self.type={}
+  def debug(self):
+    print(self.gettype("var int a=2"))
   def de(self,str):
     p1=str.replace(' ','7')
     time=0
@@ -20,6 +22,7 @@ class compiler(object):
       raw.close()
     return txt.split('\n')
   def gettype(self,str):
+    range=str[:3]
     raw=(self.de(str)).replace("char","1").replace("int","2").replace("double","3").replace("method","4")
     type=raw[4]
     if type=="1":
@@ -32,5 +35,6 @@ class compiler(object):
       type="method"
     else:
       type="error"
-    return type
+    mat=[range,type]
+    return mat
 test=compiler()
