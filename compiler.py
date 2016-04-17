@@ -5,8 +5,9 @@ class compiler(object):
     self.val={}
     self.type={}
     self.range={}
+    self.atclass=''
   def debug(self):
-    print(self.gettype("var int a=2"))
+    print(self.analysis("class new (){"))
   def de(self,str):
     p1=str.replace(' ','7')
     time=0
@@ -40,18 +41,20 @@ class compiler(object):
     return mat
   def scan(self,line,key):
     time=0
+    res=[]
     for i in line:
       time=time+1
       if i == key:
-        return (time-1)
-    return -1
+        res.append(time)
+    return res
   def analysis(self,line):
+    if line[:6]=="class ":
+      p2=line.replace(' ','$')
+      m1=self.scan(p2,'$')
+      r1=p2[m1[0]:m1[1]-1]
+      self.atclass=r1
+      print("Met new class:")
+      print(self.atclass)
     if line[:4]=="met " or line[:4]=="var ":
       line=line[4:]
-    p1=line.replace("<<",'$').replace(">>",'%')
-    head=self.scan(p1,'$')
-    tail=self.scan(p1,'$')
-    if head!=-1 and tail!=-1:
-      classname=p1[:head]
-      stuff=p1[head:tail+1]
 test=compiler()
