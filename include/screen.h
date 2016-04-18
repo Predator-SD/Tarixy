@@ -50,7 +50,6 @@ unsigned char keyboard_map[128] =
 
 unsigned char livecmd='';
 
-extern unsigned char keyboard_map[128];
 extern void keyboard_handler(void);
 extern char read_port(unsigned short port);
 extern void write_port(unsigned short port, unsigned char data);
@@ -105,7 +104,7 @@ void kb_init(void)
 	write_port(0x21 , 0xFD);
 }
 
-void log(const char *str)
+void log(char *str)
 {
 	unsigned int i = 0;
 	while (str[i] != '\0') {
