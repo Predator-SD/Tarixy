@@ -2,7 +2,7 @@ class compiler(object):
   def __init__(self):
     self.debug()
     self.classes=[]
-    self.Codes=["","\n"]
+    self.Codes=["#include "screen.h"","\n"]
     self.atclass=''
   def debug(self):
     print(self.analysis("class new(){"))
@@ -61,6 +61,5 @@ class compiler(object):
       line=''
     if line[:4]=="met " or line[:4]=="var ":
       p3=self.scan(line.replace('=',' ').replace,' ')
-      line=line[4:]
     print(line)
 test=compiler()
